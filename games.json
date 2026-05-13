@@ -1,11 +1,20 @@
 [
   {
-    "id": "example-tcg",
-    "name": "Example TCG",
-    "publisher": "Example Publisher",
-    "years_active": "1996\u20132001",
-    "db": "data/example-tcg.db",
-    "cover_color": "#2d4a2d",
-    "notes": "Starter placeholder \u2014 replace with your first real game."
+    "id": "wow-tcg",
+    "name": "World of Warcraft TCG",
+    "publisher": "Upper Deck Entertainment",
+    "years_active": "2006–2013",
+    "db": "data/wow-tcg.db",
+    "cover_color": "#1a3a6e",
+    "notes": "The official TCG for Blizzard's World of Warcraft MMO. Notable for its Loot cards, which granted in-game WoW items including the iconic Spectral Tiger mount."
+  },
+  {
+    "id": "dune-ccg",
+    "name": "Dune CCG",
+    "publisher": "Last Unicorn Games",
+    "years_active": "1997–1999",
+    "db": "data/dune-ccg.db",
+    "cover_color": "#6b4410",
+    "notes": "Based on Frank Herbert's Dune novels. Six factions — Atreides, Harkonnen, Corrino, Fremen, Bene Gesserit, and Spacing Guild — compete for control of Arrakis and its spice."
   }
 ]
