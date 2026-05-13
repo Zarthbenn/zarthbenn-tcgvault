@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCG Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0c0b09;
+  --surface:   #161410;
+  --surface2:  #1e1b16;
+  --border:    #2e2a22;
+  --border2:   #3d382e;
+  --gold:      #c8963c;
+  --gold-dim:  #8a6628;
+  --text:      #e8e3d8;
+  --text-dim:  #7a7060;
+  --text-mid:  #b0a890;
+  --danger:    #8b2f2f;
+  --card-ratio: 5 / 7;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+  cursor: default;
+}
+
+/* ── Grain overlay ─────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* ── Header ────────────────────────────────────── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(12,11,9,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.logo em {
+  font-style: normal;
+  color: var(--gold);
+}
+.logo:hover { color: var(--gold); }
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-left: 32px;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+.breadcrumb .crumb {
+  cursor: pointer;
+  color: var(--text-mid);
+  transition: color 0.15s;
+  padding: 4px 6px;
+}
+.breadcrumb .crumb:hover { color: var(--gold); }
+.breadcrumb .sep { color: var(--border2); margin: 0 2px; }
+.breadcrumb .crumb.current { color: var(--text-dim); cursor: default; pointer-events: none; }
+
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+#card-count {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}
+
+/* ── Page container ────────────────────────────── */
+.page {
+  padding: 48px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Section heading ───────────────────────────── */
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Home: game grid ───────────────────────────── */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2px;
+}
+.game-tile {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 32px 28px 28px;
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+.game-tile::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--game-color, var(--gold-dim));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.game-tile:hover { background: var(--surface2); border-color: var(--border2); }
+.game-tile:hover::before { transform: scaleX(1); }
+.game-tile:hover .game-tile-arrow { opacity: 1; transform: translateX(0); }
+
+.game-tile-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.game-tile-meta {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.game-tile-notes {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+.game-tile-arrow {
+  position: absolute;
+  bottom: 20px; right: 24px;
+  font-size: 18px;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all 0.2s;
+}
+
+/* Loading indicator */
+.loading-ring {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Game view: hero + set list ────────────────── */
+.game-hero {
+  margin-bottom: 48px;
+}
+.game-hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.game-hero-meta {
+  display: flex;
+  gap: 28px;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.game-hero-meta strong { color: var(--text-mid); }
+.game-hero-notes {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-dim);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+.set-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2px;
+}
+.set-tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 22px 22px 18px;
+  cursor: pointer;
+  transition: all 0.18s;
+  position: relative;
+}
+.set-tile:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+}
+.set-tile:hover .set-tile-arrow { opacity: 1; }
+.set-tile-code {
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.set-tile-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.set-tile-date { font-size: 10px; color: var(--text-dim); }
+.set-tile-count {
+  margin-top: 12px;
+  font-size: 10px;
+  color: var(--gold-dim);
+  letter-spacing: 0.06em;
+}
+.set-tile-arrow {
+  position: absolute;
+  top: 18px; right: 18px;
+  font-size: 14px;
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+
+/* ── Set view: search + card grid ─────────────── */
+.set-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.search-input {
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 9px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  letter-spacing: 0.04em;
+}
+.search-input::placeholder { color: var(--text-dim); }
+.search-input:focus { border-color: var(--gold-dim); }
+
+.filter-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 9px 10px;
+  outline: none;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+}
+.filter-select:focus { border-color: var(--gold-dim); }
+
+/* ── Card grid ─────────────────────────────────── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.card-tile {
+  position: relative;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+  aspect-ratio: var(--card-ratio);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  animation: cardIn 0.25s ease both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.card-tile:nth-child(2)  { animation-delay: 0.02s; }
+.card-tile:nth-child(3)  { animation-delay: 0.04s; }
+.card-tile:nth-child(4)  { animation-delay: 0.06s; }
+.card-tile:nth-child(5)  { animation-delay: 0.08s; }
+.card-tile:nth-child(6)  { animation-delay: 0.10s; }
+.card-tile:nth-child(7)  { animation-delay: 0.12s; }
+.card-tile:nth-child(8)  { animation-delay: 0.14s; }
+
+.card-tile:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  border-color: var(--border2);
+  z-index: 2;
+}
+
+.card-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+/* No-image placeholder */
+.card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 10px;
+  text-align: center;
+  background: linear-gradient(160deg, var(--surface2) 0%, var(--surface) 100%);
+  border: 1px solid var(--border);
+}
+.card-placeholder .ph-num {
+  font-size: 9px;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.card-placeholder .ph-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.card-placeholder .ph-type {
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+.no-scan-badge {
+  position: absolute;
+  bottom: 6px; right: 6px;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  background: rgba(0,0,0,0.6);
+  padding: 2px 5px;
+}
+
+/* Hover overlay on card tile */
+.card-tile-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.18s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10px 8px;
+}
+.card-tile:hover .card-tile-overlay { opacity: 1; }
+.card-tile-overlay .ov-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.2;
+}
+.card-tile-overlay .ov-type {
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+/* Rarity dot */
+.rarity-dot {
+  position: absolute;
+  top: 6px; right: 6px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.4);
+}
+.r-Common    { background: #6e6e6e; }
+.r-Uncommon  { background: #5a8fa8; }
+.r-Rare      { background: #c8963c; }
+.r-Legendary, .r-Mythic { background: #b05a20; }
+
+/* ── Card detail modal ─────────────────────────── */
+.modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(6px);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-bg.open { display: flex; }
+
+.modal {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  max-width: 780px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 32px;
+  position: relative;
+  animation: modalIn 0.22s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.97) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-close {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: none; border: none;
+  color: var(--text-dim); font-size: 20px; cursor: pointer;
+  transition: color 0.15s; line-height: 1;
+}
+.modal-close:hover { color: var(--text); }
+
+/* Card image panel */
+.modal-img-wrap {
+  width: 200px;
+  flex-shrink: 0;
+}
+.modal-card-img {
+  width: 200px;
+  aspect-ratio: var(--card-ratio);
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border2);
+  display: block;
+}
+.modal-no-img {
+  width: 200px;
+  aspect-ratio: var(--card-ratio);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 12px;
+}
+
+/* Info panel */
+.modal-info { min-width: 0; }
+.modal-num {
+  font-size: 10px;
+  color: var(--gold-dim);
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}
+.modal-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 4px;
+}
+.modal-typeline {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-field { margin-bottom: 14px; }
+.modal-field label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 4px;
+}
+.modal-field p {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.65;
+}
+.modal-field .flavor {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-dim);
+}
+.extra-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.extra-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.extra-chip strong { color: var(--gold-dim); margin-right: 4px; }
+
+/* ── Empty / error states ──────────────────────── */
+.state-msg {
+  padding: 80px 0;
+  text-align: center;
+  color: var(--text-dim);
+}
+.state-msg h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--text-mid);
+  margin-bottom: 8px;
+}
+
+/* ── Scan progress bar ─────────────────────────── */
+.scan-bar-wrap {
+  margin-top: 6px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  max-width: 160px;
+}
+.scan-bar {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+/* ── Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" id="logo">TCG <em>Archive</em></div>
+  <nav class="breadcrumb" id="breadcrumb"></nav>
+  <div class="header-right">
+    <span id="card-count"></span>
+  </div>
+</header>
+
+<div id="app"></div>
+
+<!-- Card modal -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal-img-wrap" id="modal-img"></div>
+    <div class="modal-info" id="modal-info"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.min.js"></script>
+<script>
+// ── State ─────────────────────────────────────────────────
+const state = {
+  games: [],
+  currentGame: null,   // manifest entry
+  db: null,
+  currentSet: null,
+  loadedDbs: {}        // cache: db path → SQL.Database
+};
+
+// ── sql.js init ───────────────────────────────────────────
+const SQL_READY = initSqlJs({
+  locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${f}`
+});
+
+// ── Boot ─────────────────────────────────────────────────
+async function boot() {
+  try {
+    const res = await fetch('games.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    state.games = await res.json();
+    renderHome();
+  } catch (e) {
+    document.getElementById('app').innerHTML = `
+      <div class="page"><div class="state-msg">
+        <h3>Could not load games.json</h3>
+        <p>Make sure you're running this through a local server,<br>not opening index.html directly as a file.</p>
+      </div></div>`;
+  }
+}
+
+// ── Query helper ──────────────────────────────────────────
+function q(db, sql, params = []) {
+  const res = db.exec(sql, params);
+  if (!res.length) return [];
+  const { columns, values } = res[0];
+  return values.map(row => Object.fromEntries(columns.map((c, i) => [c, row[i]])));
+}
+
+// ── Load a game DB (with cache) ───────────────────────────
+async function loadGameDb(game) {
+  if (state.loadedDbs[game.db]) return state.loadedDbs[game.db];
+  const SQL = await SQL_READY;
+  const res = await fetch(game.db);
+  if (!res.ok) throw new Error(`Could not fetch ${game.db}`);
+  const buf = await res.arrayBuffer();
+  const db = new SQL.Database(new Uint8Array(buf));
+  state.loadedDbs[game.db] = db;
+  return db;
+}
+
+// ── Breadcrumb ────────────────────────────────────────────
+function setBreadcrumb(crumbs) {
+  // crumbs: [{label, onClick}] — last one is current (no click)
+  const el = document.getElementById('breadcrumb');
+  el.innerHTML = crumbs.map((c, i) => {
+    const last = i === crumbs.length - 1;
+    const sep = i > 0 ? `<span class="sep">›</span>` : '';
+    if (last) return `${sep}<span class="crumb current">${c.label}</span>`;
+    return `${sep}<span class="crumb" onclick="(${c.onClick})()">${c.label}</span>`;
+  }).join('');
+}
+
+// ── HOME ──────────────────────────────────────────────────
+function renderHome() {
+  state.currentGame = null;
+  state.currentSet = null;
+  state.db = null;
+  setBreadcrumb([]);
+  document.getElementById('card-count').textContent = '';
+  document.getElementById('app').innerHTML = `
+    <div class="page">
+      <div class="section-title">Card Games</div>
+      <div class="game-grid" id="game-grid"></div>
+    </div>`;
+  const grid = document.getElementById('game-grid');
+  if (!state.games.length) {
+    grid.innerHTML = `<div class="state-msg"><h3>No games in archive yet</h3><p>Add entries to games.json to get started.</p></div>`;
+    return;
+  }
+  state.games.forEach(game => {
+    const tile = document.createElement('div');
+    tile.className = 'game-tile';
+    tile.style.setProperty('--game-color', game.cover_color || '#c8963c');
+    tile.innerHTML = `
+      <div class="game-tile-name">${game.name}</div>
+      <div class="game-tile-meta">${[game.publisher, game.years_active].filter(Boolean).join(' · ')}</div>
+      ${game.notes ? `<div class="game-tile-notes">${game.notes}</div>` : ''}
+      <div class="game-tile-arrow">→</div>`;
+    tile.addEventListener('click', () => openGame(game, tile));
+    grid.appendChild(tile);
+  });
+}
+
+// ── GAME VIEW ─────────────────────────────────────────────
+async function openGame(game, tileEl) {
+  if (tileEl) {
+    tileEl.style.opacity = '0.6';
+    tileEl.innerHTML += `<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)"><span class="loading-ring"></span></span>`;
+  }
+  try {
+    const db = await loadGameDb(game);
+    state.currentGame = game;
+    state.db = db;
+    state.currentSet = null;
+    renderGame(game, db);
+  } catch(e) {
+    alert(`Failed to load ${game.name}: ${e.message}`);
+    if (tileEl) { tileEl.style.opacity = ''; renderHome(); }
+  }
+}
+
+function renderGame(game, db) {
+  const sets = q(db, `
+    SELECT s.*, (SELECT COUNT(*) FROM cards WHERE set_id = s.id) as card_count,
+    (SELECT COUNT(*) FROM cards WHERE set_id = s.id AND image_url IS NOT NULL AND image_url != '') as scan_count
+    FROM sets s ORDER BY release_date, name`);
+
+  setBreadcrumb([
+    { label: 'Archive', onClick: `renderHome` },
+    { label: game.name }
+  ]);
+
+  const totalCards = sets.reduce((a, s) => a + (s.card_count || 0), 0);
+  const totalScans = sets.reduce((a, s) => a + (s.scan_count || 0), 0);
+  document.getElementById('card-count').textContent =
+    `${totalScans} / ${totalCards} scanned`;
+
+  let setsHtml = sets.map(s => {
+    const pct = s.card_count ? Math.round((s.scan_count / s.card_count) * 100) : 0;
+    return `
+    <div class="set-tile" onclick="openSet(${s.id})">
+      ${s.code ? `<div class="set-tile-code">${s.code}</div>` : ''}
+      <div class="set-tile-name">${s.name}</div>
+      ${s.release_date ? `<div class="set-tile-date">${s.release_date}</div>` : ''}
+      <div class="set-tile-count">${s.card_count} cards</div>
+      <div class="scan-bar-wrap"><div class="scan-bar" style="width:${pct}%"></div></div>
+      <span class="set-tile-arrow">→</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="page">
+      <div class="game-hero">
+        <h1>${game.name}</h1>
+        <div class="game-hero-meta">
+          ${game.publisher ? `<span><strong>Publisher</strong> ${game.publisher}</span>` : ''}
+          ${game.years_active ? `<span><strong>Years</strong> ${game.years_active}</span>` : ''}
+          <span><strong>${sets.length}</strong> sets · <strong>${totalCards}</strong> cards</span>
+        </div>
+        ${game.notes ? `<p class="game-hero-notes">${game.notes}</p>` : ''}
+      </div>
+      <div class="section-title">Sets &amp; Expansions</div>
+      <div class="set-list">${setsHtml || '<p style="color:var(--text-dim)">No sets found.</p>'}</div>
+    </div>`;
+}
+
+// ── SET VIEW ──────────────────────────────────────────────
+function openSet(setId) {
+  const db = state.db;
+  const set = q(db, 'SELECT * FROM sets WHERE id = ?', [setId])[0];
+  if (!set) return;
+  state.currentSet = set;
+  renderSet(set, db);
+}
+
+function renderSet(set, db, filter = '', rarityFilter = '') {
+  let sql = 'SELECT * FROM cards WHERE set_id = ? ORDER BY CAST(collector_number AS INTEGER), name';
+  let allCards = q(db, sql, [set.id]);
+
+  const rarities = [...new Set(allCards.map(c => c.rarity).filter(Boolean))].sort();
+
+  setBreadcrumb([
+    { label: 'Archive', onClick: `renderHome` },
+    { label: state.currentGame.name, onClick: `renderGame(state.currentGame, state.db)` },
+    { label: set.name }
+  ]);
+
+  const scanned = allCards.filter(c => c.image_url).length;
+  document.getElementById('card-count').textContent =
+    `${scanned} / ${allCards.length} scanned`;
+
+  const rarityOpts = ['<option value="">All rarities</option>']
+    .concat(rarities.map(r => `<option value="${r}">${r}</option>`)).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="page">
+      <div class="set-controls">
+        <input class="search-input" id="card-search" placeholder="Search cards…" value="${filter}" autocomplete="off">
+        <select class="filter-select" id="rarity-filter">
+          ${rarityOpts}
+        </select>
+      </div>
+      <div id="card-grid-wrap"></div>
+    </div>`;
+
+  document.getElementById('rarity-filter').value = rarityFilter;
+
+  function applyFilters() {
+    const search = document.getElementById('card-search')?.value?.toLowerCase() || '';
+    const rarity = document.getElementById('rarity-filter')?.value || '';
+    let filtered = allCards;
+    if (search) filtered = filtered.filter(c =>
+      c.name?.toLowerCase().includes(search) ||
+      c.card_type?.toLowerCase().includes(search)
+    );
+    if (rarity) filtered = filtered.filter(c => c.rarity === rarity);
+    renderCardGrid(filtered);
+  }
+
+  document.getElementById('card-search')?.addEventListener('input', applyFilters);
+  document.getElementById('rarity-filter')?.addEventListener('change', applyFilters);
+  applyFilters();
+}
+
+function renderCardGrid(cards) {
+  const wrap = document.getElementById('card-grid-wrap');
+  if (!wrap) return;
+  if (!cards.length) {
+    wrap.innerHTML = `<div class="state-msg"><h3>No cards match</h3></div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="card-grid">${cards.map(buildCardTile).join('')}</div>`;
+}
+
+function buildCardTile(c) {
+  const rClass = c.rarity ? `r-${c.rarity}` : '';
+  const inner = c.image_url
+    ? `<img src="${c.image_url}" alt="${c.name}" loading="lazy"
+          onerror="this.outerHTML='${escapePlaceholder(c)}'">
+       <div class="card-tile-overlay">
+         <div class="ov-name">${c.name}</div>
+         <div class="ov-type">${c.card_type || ''}</div>
+       </div>`
+    : `<div class="card-placeholder">
+         <div class="ph-num">${c.collector_number ? '#' + c.collector_number : ''}</div>
+         <div class="ph-name">${c.name}</div>
+         <div class="ph-type">${c.card_type || ''}</div>
+       </div>
+       <div class="no-scan-badge">NO SCAN</div>`;
+
+  return `<div class="card-tile" onclick="showCard(${c.id})">
+    ${inner}
+    ${rClass ? `<div class="rarity-dot ${rClass}"></div>` : ''}
+  </div>`;
+}
+
+function escapePlaceholder(c) {
+  return `<div class=\\"card-placeholder\\"><div class=\\"ph-num\\">${c.collector_number ? '#'+c.collector_number : ''}</div><div class=\\"ph-name\\">${c.name}</div><div class=\\"ph-type\\">${c.card_type||''}</div></div>`;
+}
+
+// ── CARD MODAL ────────────────────────────────────────────
+function showCard(cardId) {
+  const db = state.db;
+  const c = q(db, 'SELECT * FROM cards WHERE id = ?', [cardId])[0];
+  if (!c) return;
+
+  // Image
+  document.getElementById('modal-img').innerHTML = c.image_url
+    ? `<img class="modal-card-img" src="${c.image_url}" alt="${c.name}"
+           onerror="this.outerHTML='<div class=\\"modal-no-img\\">No scan available</div>'">`
+    : `<div class="modal-no-img">No scan available</div>`;
+
+  // Extra data chips
+  let extraHtml = '';
+  if (c.extra_data) {
+    try {
+      const obj = JSON.parse(c.extra_data);
+      const chips = Object.entries(obj)
+        .map(([k,v]) => `<span class="extra-chip"><strong>${k}</strong>${v}</span>`).join('');
+      if (chips) extraHtml = `<div class="modal-field"><label>Attributes</label><div class="extra-chips">${chips}</div></div>`;
+    } catch(e) {}
+  }
+
+  document.getElementById('modal-info').innerHTML = `
+    ${c.collector_number ? `<div class="modal-num"># ${c.collector_number}</div>` : ''}
+    <div class="modal-name">${c.name}</div>
+    <div class="modal-typeline">
+      ${[c.card_type, c.rarity].filter(Boolean).join(' · ')}
+      ${state.currentSet ? ` · ${state.currentSet.name}` : ''}
+    </div>
+    ${c.rules_text ? `<div class="modal-field"><label>Rules Text</label><p>${c.rules_text}</p></div>` : ''}
+    ${c.flavor_text ? `<div class="modal-field"><label>Flavor Text</label><p class="flavor">${c.flavor_text}</p></div>` : ''}
+    ${extraHtml}
+    ${c.artist ? `<div class="modal-field"><label>Artist</label><p>${c.artist}</p></div>` : ''}
+    ${c.source_notes ? `<div class="modal-field"><label>Source Notes</label><p>${c.source_notes}</p></div>` : ''}
+  `;
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-bg').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
+
+// ── Logo → home ───────────────────────────────────────────
+document.getElementById('logo').addEventListener('click', renderHome);
+
+// ── Go ────────────────────────────────────────────────────
+boot();
+</script>
+</body>
+</html>

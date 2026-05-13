@@ -1,0 +1,11 @@
+[
+  {
+    "id": "example-tcg",
+    "name": "Example TCG",
+    "publisher": "Example Publisher",
+    "years_active": "1996\u20132001",
+    "db": "data/example-tcg.db",
+    "cover_color": "#2d4a2d",
+    "notes": "Starter placeholder \u2014 replace with your first real game."
+  }
+]
