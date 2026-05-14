@@ -1,73 +1,38 @@
 [
   {
-    "id": "wow-tcg",
-    "name": "World of Warcraft TCG",
-    "publisher": "Upper Deck Entertainment",
-    "years_active": "2006–2013",
-    "db": "data/wow-tcg.db",
-    "cover_color": "#1a3a6e",
-    "hero_image": "",
-    "notes": "The official TCG for Blizzard's World of Warcraft MMO.",
-    "overview": "The World of Warcraft Trading Card Game brought the iconic MMORPG to the tabletop, letting players build decks around heroes, allies, and abilities drawn directly from the game's lore. Published by Upper Deck Entertainment from 2006 until 2013, the game spanned over 30 expansions and became famous for its rare Loot cards — physical cards containing codes for exclusive in-game items, including the highly sought-after Spectral Tiger mount and the Feast of Winter Veil cosmetics. After Upper Deck lost the Blizzard license in 2010, Cryptozoic Entertainment continued the line until its discontinuation in 2013.",
-    "players": "2",
-    "play_time": "20–45 min",
-    "out_of_print": true,
-    "designers": ["Brian Kibler", "Mike Hummel", "Ben Drago"],
-    "how_to_play_video": "",
+    "id": "qftg-cc",
+    "name": "Quest for the Grail CCG",
+    "publisher": "Horizon Games",
+    "years_active": "1995",
+    "db": "data/qftg-ccg.db",
+    "cover_color": "#880808",
+    "hero_image": "imgs/qftg-hero.jpg",
+    "card_back_image": "https://drive.google.com/thumbnail?id=12sUk4vA9jofDyoCQ1bC8w3QqaVekwMiu&sz=w350",
+    "notes": "Build an Arthurian kingdom and lead legendary knights through trials of valor to achieve the Holy Grail and secure your victory.",
+    "overview": "Your goal is to unify the fragmented nations of the British Isles and through virtuous rule establish the Holy Kingdom of Logres. Players construct a Court Deck of at least 40 cards—including Kings, Knights, and Domains—and a Quest Deck containing a minimum of 10 challenges that player's Warriors may undertake. To sustain your court, you must play Domain cards to generate Power, which is used to pay the necessary Upkeep for your Warriors and their retainers. As you expand your influence, you assign Companions, Vows, and Rewards to your Knights to enhance their characteristics and prepare them for the trials ahead. <br><br>Gameplay progresses as Warriors undertake Quests or engage in Formal and Mortal Combat to gain Valor. Combat is resolved by rolling two six-sided dice and adding a Warrior's Prowess to hit an opponent's Endurance. To secure ultimate victory, you must either fulfill a unique condition listed on a King card or have a Knight with at least 12 Valor successfully overcome three Quests in a single turn to achieve the Holy Grail.",
+    "designers": ["Dave Nalle", "Richard Trainham"],
+    "overview_image": "imgs/qftg-over.jpg",
+    "overview_image_caption": "BGG - Ken Van Pelt",
+    "how_to_play_videos": [
+      { "label": "Full Rules Video [Zarthbenn]", "url": "https://youtu.be/PhgywNeV3Ys" }
+    ],
+     "rulebook_links": [
+      { "label": "Rulebook", "url": "https://drive.google.com/file/d/18XWoRh2IWz6bvveUXxbEOo-_RQZ8mHDc/view?usp=sharing" }
+    ],
+    "where_to_play_links": [
+      { "label": "Tabletop Simulator Mod", "url": "https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbmIzOVk3VXVDclVmU01vaFhGbFpXUkRFSzVPd3xBQ3Jtc0tsVjZBQjR0SWQzaHcwYnJac3Q3eEJEcDJObEtjbkVTRTdRdUdnaVR4SThhV2hzYWtFQzZ5cTJaVGNKYXdwd3hMX1ZVUVF6ancxeEJoY1dsamxza0lmVi1Wbmw2MXFmY0pteWxnTTJ4My05QlNTZHc5TQ&q=https%3A%2F%2Fsteamcommunity.com%2Fsharedfiles%2Ffiledetails%2F%3Fid%3D3065603730&v=PhgywNeV3Ys" }
+    ],
     "community_links": [
-      { "label": "r/wowtcg — Reddit Community", "url": "https://www.reddit.com/r/wowtcg/" },
-      { "label": "BoardGameGeek Entry", "url": "https://boardgamegeek.com/boardgame/19643/world-of-warcraft-the-trading-card-game" }
+      { "label": "BoardGameGeek Page", "url": "https://boardgamegeek.com/boardgame/2137/quest-for-the-grail" }
     ],
-    "rulebook_links": [
-      { "label": "Core Rulebook (PDF)", "url": "" },
-      { "label": "Quick-Start Rules", "url": "" }
-    ],
-    "find_cards": [
-      { "label": "eBay Listings", "url": "https://www.ebay.com/sch/i.html?_nkw=world+of+warcraft+tcg" },
-      { "label": "TCGPlayer", "url": "https://www.tcgplayer.com/search/world-of-warcraft/product" }
-    ],
-    "errata_links": [
-      { "label": "Comprehensive Rules Archive", "url": "" }
-    ],
-    "related_games": [
-      "World of Warcraft Miniatures Game",
-      "World of Warcraft Board Game",
-      "Hearthstone"
-    ]
-  },
-  {
-    "id": "dune-ccg",
-    "name": "Dune CCG",
-    "publisher": "Last Unicorn Games",
-    "years_active": "1997–1999",
-    "db": "data/dune-ccg.db",
-    "cover_color": "#6b4410",
-    "hero_image": "",
-    "notes": "Based on Frank Herbert's Dune novels.",
-    "overview": "The Dune Collectible Card Game, published by Last Unicorn Games in 1997, adapted Frank Herbert's landmark science fiction universe into a strategic card game of political intrigue, resource control, and faction warfare. Players choose one of six great powers — House Atreides, House Harkonnen, the Imperial House Corrino, the Fremen of the deep desert, the Bene Gesserit sisterhood, or the enigmatic Spacing Guild — each with asymmetric mechanics reflecting their role in the novels. Victory requires controlling the spice Melange, the most valuable substance in the universe. The game received two sets before Last Unicorn Games was acquired by Wizards of the Coast in 1999, ending the line.",
-    "players": "2–6",
-    "play_time": "60–120 min",
-    "out_of_print": true,
-    "designers": ["Christian Moore", "Owen Seyler", "Ross Isaacs"],
-    "how_to_play_video": "",
-    "community_links": [
-      { "label": "BoardGameGeek Entry", "url": "https://boardgamegeek.com/boardgame/37442/dune-the-collectible-card-game" },
-      { "label": "Dune Fan Community", "url": "https://www.dunenovels.com" }
-    ],
-    "rulebook_links": [
-      { "label": "Premiere Rulebook (PDF)", "url": "" },
-      { "label": "Eye of the Storm Rules Insert", "url": "" }
-    ],
-    "find_cards": [
-      { "label": "eBay Listings", "url": "https://www.ebay.com/sch/i.html?_nkw=dune+ccg+card+game" }
-    ],
-    "errata_links": [
-      { "label": "Official Errata Document", "url": "" }
-    ],
-    "related_games": [
-      "Dune (Avalon Hill Board Game)",
-      "Dune: A Game of Conquest and Diplomacy",
-      "CHOAM — A Dune Boardgame Expansion"
-    ]
+    "scan_project": {
+     "scanned_by": ["Zarthbenn"],
+      "processed_by": "Zarthbenn",
+      "start_year": "2023",
+      "end_year": "",
+      "downloads": [
+        { "label": "Card Scans Archive [Full]", "url": "https://drive.google.com/drive/folders/1Ee84WB-kBRBnDLJ8CrX3W69SBxqpXJl3" }
+      ]
+    }
   }
 ]
