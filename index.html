@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TCG Archive</title>
+<title>Zarthbenn's TCG Vault</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:        #0c0b09;
@@ -18,23 +18,26 @@
   --text:      #e8e3d8;
   --text-dim:  #7a7060;
   --text-mid:  #b0a890;
-  --danger:    #8b2f2f;
   --card-ratio: 5 / 7;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'DM Mono', monospace;
-  font-size: 13px;
+  font-family: 'Onest', sans-serif;
+  font-size: 14px;
   line-height: 1.6;
   min-height: 100vh;
   cursor: default;
+  display: flex;
+  flex-direction: column;
 }
+
+#app { flex: 1; }
 
 /* ── Grain overlay ─────────────────────────────── */
 body::before {
@@ -59,7 +62,6 @@ header {
   height: 56px;
   display: flex;
   align-items: center;
-  gap: 0;
 }
 .logo {
   font-family: 'Cormorant Garamond', serif;
@@ -80,7 +82,6 @@ header {
 .breadcrumb {
   display: flex;
   align-items: center;
-  gap: 0;
   margin-left: 32px;
   font-size: 11px;
   color: var(--text-dim);
@@ -110,6 +111,24 @@ header {
   margin: 0 auto;
   animation: fadeIn 0.3s ease;
 }
+.game-page {
+  position: relative;
+}
+.game-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 110px;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--game-color, transparent) 22%, transparent) 0%,
+    transparent 100%);
+}
+.game-page > * { position: relative; z-index: 1; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -118,15 +137,14 @@ header {
 /* ── Section heading ───────────────────────────── */
 .section-title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--gold-dim);
-  margin-bottom: 28px;
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  margin-bottom: 24px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 20px;
 }
 .section-title::after {
   content: '';
@@ -134,6 +152,50 @@ header {
   height: 1px;
   background: var(--border);
 }
+
+/* ── Footer ────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.footer-made {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+.footer-made strong { color: var(--text-mid); font-weight: 400; }
+.footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.footer-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.footer-social:hover { border-color: var(--gold-dim); color: var(--gold); }
+.footer-social svg { width: 15px; height: 15px; fill: currentColor; }
+.footer-github {
+  width: auto;
+  padding: 0 14px;
+  gap: 8px;
+  font-family: 'Onest', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+.footer-github-label { white-space: nowrap; }
 
 /* ── Home: game grid ───────────────────────────── */
 .game-grid {
@@ -208,7 +270,7 @@ header {
 
 /* Content area */
 .game-tile-body {
-  padding: 28px 28px 24px;
+  padding: 18px 28px 24px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -221,23 +283,22 @@ header {
   margin-bottom: 8px;
   color: var(--text);
 }
+.game-tile-notes {
+  font-family: 'Onest', sans-serif;
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  flex: 1;
+  margin-bottom: 20px;
+}
 .game-tile-meta {
   font-size: 10px;
   color: var(--text-dim);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-bottom: 16px;
-  padding-bottom: 16px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
-}
-.game-tile-notes {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 15px;
-  color: var(--text-mid);
-  line-height: 1.65;
-  flex: 1;
-  margin-bottom: 20px;
 }
 .game-tile-stats {
   display: grid;
@@ -298,132 +359,313 @@ header {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Game view: hero + set list ────────────────── */
-.game-hero {
-  margin-bottom: 48px;
-}
-.game-hero h1 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 52px;
-  font-weight: 300;
-  letter-spacing: 0.03em;
-  line-height: 1.1;
-  margin-bottom: 12px;
-}
-.game-hero-meta {
-  display: flex;
-  gap: 28px;
-  font-size: 11px;
-  color: var(--text-dim);
-  letter-spacing: 0.06em;
-  margin-bottom: 8px;
-}
-.game-hero-meta strong { color: var(--text-mid); }
-.game-hero-notes {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 16px;
-  color: var(--text-dim);
-  max-width: 600px;
-  line-height: 1.6;
-  margin-top: 10px;
-}
-
-/* ── Game info section ─────────────────────────── */
-.game-info {
-  margin-bottom: 52px;
-}
-
-/* YouTube embed */
-.game-video-wrap {
-  position: relative;
+/* ── Game page hero banner ─────────────────────── */
+.game-page-hero {
   width: 100%;
-  max-width: 780px;
-  aspect-ratio: 16 / 9;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  margin-bottom: 36px;
+  height: 300px;
+  position: relative;
   overflow: hidden;
+  border-bottom: 4px solid var(--game-color, var(--gold-dim));
 }
-.game-video-wrap iframe {
-  position: absolute;
-  inset: 0;
+.game-page-hero img {
   width: 100%;
   height: 100%;
-  border: none;
+  object-fit: cover;
+  display: block;
+}
+.game-page-hero-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg,
+    var(--game-color, #1a1a1a) 0%,
+    color-mix(in srgb, var(--game-color, #1a1a1a) 40%, #0c0b09) 100%);
+}
+.game-page-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(12,11,9,0.6) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── Game page title header ────────────────────── */
+.game-hero {
+  margin-bottom: 36px;
+}
+.game-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 76px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.0;
+  margin-bottom: 0;
+}
+
+/* ── Scan documentation section ────────────────── */
+.scan-section {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  min-width: 0;
+  overflow: hidden;
+}
+.scan-section-inner {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  height: 100%;
+  min-width: 0;
+}
+.scan-card-back {
+  border-right: 1px solid var(--border);
+  padding: 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--surface2);
+  flex-shrink: 0;
+}
+.scan-card-back img {
+  height: 160px;
+  width: auto;
+  border-radius: 5px;
+  border: 1px solid var(--border2);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+  display: block;
+}
+.scan-card-back-label {
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.scan-info {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+}
+.scan-downloads-col {
+  border-left: 1px solid var(--border);
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.scan-downloads-label {
+  font-size: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  display: block;
+}
+.scan-download-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.scan-download-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-mid);
+  text-decoration: none;
+  font-size: 15px;
+  transition: color 0.15s;
+}
+.scan-download-link:hover { color: var(--gold); }
+.scan-download-icon {
+  width: 28px; height: 28px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--gold-dim);
+  transition: border-color 0.15s, color 0.15s;
+}
+.scan-download-link:hover .scan-download-icon {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+}
+.scan-info-title {
+  font-size: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.scan-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.scan-field label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.scan-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.scan-name-tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--text-mid);
+  letter-spacing: 0.02em;
+}
+.scan-year-val {
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.scan-notes {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.65;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+/* ── Game info section ─────────────────────────── */
+.game-info {
+  margin-bottom: 10px;
 }
 
 /* Quick facts strip */
 .game-facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 0;
   border: 1px solid var(--border);
-  margin-bottom: 36px;
+  margin-bottom: 0;
   background: var(--surface);
 }
 .game-fact {
-  padding: 14px 24px;
+  padding: 16px 28px;
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
-.game-fact:last-child { border-right: none; }
 .game-fact-label {
-  font-size: 9px;
-  letter-spacing: 0.18em;
+  font-size: 10px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--gold-dim);
 }
 .game-fact-val {
-  font-size: 13px;
+  font-size: 16px;
+  letter-spacing: 0.14em;
   color: var(--text);
 }
-.game-fact-val.out-of-print { color: var(--text-dim); }
-.game-fact-val.in-print { color: #6abf69; }
 
-/* Overview text */
-.game-overview {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 17px;
-  line-height: 1.8;
-  color: var(--text-mid);
-  max-width: 860px;
-  margin-bottom: 36px;
+/* Separator line below facts */
+.game-facts-sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0 0 36px 0;
 }
 
-/* Info panels grid */
-.game-info-grid {
+/* Overview with side image */
+.game-overview-block {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 2px;
-  margin-bottom: 2px;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: start;
+  margin-bottom: 36px;
+}
+.game-overview-text { min-width: 0; }
+.game-overview {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  line-height: 1.8;
+  color: var(--text-mid);
+  margin-bottom: 10px;
+}
+.game-designers {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--text-mid);
+  letter-spacing: 0.03em;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.game-overview-img-wrap {
+  width: 180px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.game-overview-img-wrap img {
+  width: 100%;
+  border: 1px solid var(--border2);
+  display: block;
+}
+.game-overview-img-caption {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* Info + scan grid — unified 3-column layout */
+.game-info-panels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 36px;
 }
 .game-info-panel {
   background: var(--surface);
   border: 1px solid var(--border);
-  padding: 22px 24px;
+  padding: 28px 28px;
+  min-width: 0;
 }
 .game-info-panel-title {
-  font-size: 9px;
-  letter-spacing: 0.2em;
+  font-size: 16px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--gold-dim);
-  margin-bottom: 14px;
-  padding-bottom: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
+}
+.span-2 { grid-column: span 2; min-width: 0; overflow: hidden; }
+.scan-community-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  min-width: 0;
 }
 .info-link-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 .info-link-list a {
   color: var(--text-mid);
   text-decoration: none;
-  font-size: 12px;
+  font-size: 15px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -432,104 +674,148 @@ header {
 .info-link-list a::before {
   content: '→';
   color: var(--gold-dim);
-  font-size: 11px;
+  font-size: 13px;
   flex-shrink: 0;
 }
 .info-link-list a:hover { color: var(--gold); }
-.designer-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.designer-tag {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  padding: 4px 10px;
-  font-size: 11px;
-  color: var(--text-mid);
-  letter-spacing: 0.03em;
-}
-.related-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.related-tag {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  padding: 4px 10px;
-  font-size: 11px;
-  color: var(--text-dim);
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 13px;
-}
 .info-empty {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-dim);
   font-style: italic;
 }
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 2px;
+
+.set-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .set-tile {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
-  padding: 22px 22px 18px;
   cursor: pointer;
-  transition: all 0.18s;
+  transition: border-color 0.22s, background 0.22s;
+  overflow: hidden;
+  min-height: 110px;
+}
+.set-tile:hover { border-color: var(--border2); background: var(--surface2); }
+.set-tile:hover .set-tile-arrow { opacity: 1; transform: translateX(0) translateY(-50%); }
+
+/* Rotated card decoration on right */
+.set-tile-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.set-tile-bg-img {
+  position: absolute;
+  right: -80px;
+  top: 120%;
+  height: 600%;
+  width: auto;
+  transform: translateY(-50%) rotate(-45deg);
+  object-fit: cover;
+}
+
+/* Gradient mask */
+.set-tile-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right,
+    var(--surface) 0%,
+    var(--surface) 30%,
+    transparent 62%,
+    rgba(12,11,9,0.75) 100%);
+  transition: background 0.22s;
+}
+.set-tile:hover .set-tile-bg::after {
+  background: linear-gradient(to right,
+    var(--surface2) 0%,
+    var(--surface2) 30%,
+    transparent 62%,
+    rgba(22,20,16,0.75) 100%);
+}
+
+/* Foreground content */
+.set-tile-body {
   position: relative;
+  z-index: 2;
+  padding: 26px 80px 26px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.set-tile:hover {
-  background: var(--surface2);
-  border-color: var(--border2);
+.set-tile-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
-.set-tile:hover .set-tile-arrow { opacity: 1; }
+.set-tile-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1;
+}
 .set-tile-code {
   font-size: 9px;
   letter-spacing: 0.18em;
   color: var(--gold-dim);
   text-transform: uppercase;
-  margin-bottom: 6px;
+  background: rgba(200,150,60,0.1);
+  border: 1px solid var(--gold-dim);
+  padding: 7px 9px 4px;
+  flex-shrink: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
 }
-.set-tile-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
-  margin-bottom: 4px;
+.set-tile-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
 }
-.set-tile-date { font-size: 10px; color: var(--text-dim); }
-.set-tile-count {
-  margin-top: 12px;
-  font-size: 10px;
-  color: var(--gold-dim);
-  letter-spacing: 0.06em;
+.set-tile-count { color: var(--gold-dim); letter-spacing: 0.06em; }
+.set-tile-notes {
+  font-family: 'Onest', sans-serif;
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  max-width: 600px;
 }
 .set-tile-arrow {
   position: absolute;
-  top: 18px; right: 18px;
-  font-size: 14px;
+  right: 28px;
+  top: 50%;
+  transform: translateX(-4px) translateY(-50%);
+  font-size: 36px;
   color: var(--gold);
   opacity: 0;
-  transition: opacity 0.18s;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 2;
+  line-height: 1;
 }
 
 /* ── Set view: search + card grid ─────────────── */
 .set-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: 8px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 .search-input {
   flex: 1;
-  min-width: 200px;
-  max-width: 360px;
+  min-width: 180px;
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
-  font-family: 'DM Mono', monospace;
+  font-family: 'Onest', sans-serif;
   font-size: 12px;
   padding: 9px 14px;
   outline: none;
@@ -543,20 +829,137 @@ header {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text-mid);
-  font-family: 'DM Mono', monospace;
+  font-family: 'Onest', sans-serif;
   font-size: 11px;
-  padding: 9px 10px;
+  padding: 9px 32px 9px 10px;
   outline: none;
   cursor: pointer;
   letter-spacing: 0.04em;
+  max-width: 160px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a7060'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
 }
 .filter-select:focus { border-color: var(--gold-dim); }
 
-/* ── Card grid ─────────────────────────────────── */
+.size-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+.size-control-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.size-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 90px;
+  height: 2px;
+  background: var(--border2);
+  outline: none;
+  cursor: pointer;
+}
+.size-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.size-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.size-slider::-moz-range-thumb {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: none;
+  cursor: pointer;
+}
+
+/* ── View toggle ───────────────────────────────── */
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.view-toggle-btn {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 14px;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1;
+}
+.view-toggle-btn:first-child { border-right: 1px solid var(--border); }
+.view-toggle-btn.active { background: var(--surface2); color: var(--gold); }
+.view-toggle-btn:hover:not(.active) { background: var(--surface2); color: var(--text-mid); }
+
+/* ── Card list view ────────────────────────────── */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.card-list-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 140px 100px 140px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  min-height: 40px;
+}
+.card-list-row:hover { background: var(--surface2); border-color: var(--border2); }
+.card-list-row.list-header {
+  background: var(--bg);
+  border-color: var(--border);
+  cursor: default;
+  min-height: 32px;
+}
+.card-list-row.list-header:hover { background: var(--bg); }
+.card-list-cell {
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--text-mid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-right: 1px solid var(--border);
+}
+.card-list-cell:last-child { border-right: none; }
+.card-list-row.list-header .card-list-cell {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.cell-num  { color: var(--text-dim); font-size: 11px; text-align: right; }
+.cell-name { color: var(--text); font-weight: 400; }
+.cell-rarity { display: flex; align-items: center; gap: 8px; }
+.cell-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.3);
+}
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 154px));
+  gap: 6px;
+  justify-content: start;
 }
 
 .card-tile {
@@ -594,7 +997,6 @@ header {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: opacity 0.2s;
 }
 
 /* No-image placeholder */
@@ -611,20 +1013,20 @@ header {
   border: 1px solid var(--border);
 }
 .card-placeholder .ph-num {
-  font-size: 9px;
+  font-size: 13px;
   color: var(--gold-dim);
   letter-spacing: 0.1em;
   margin-bottom: 8px;
 }
 .card-placeholder .ph-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 14px;
+  font-size: 21px;
   color: var(--text-mid);
   line-height: 1.3;
   margin-bottom: 6px;
 }
 .card-placeholder .ph-type {
-  font-size: 9px;
+  font-size: 13px;
   color: var(--text-dim);
   letter-spacing: 0.06em;
 }
@@ -676,6 +1078,7 @@ header {
 .r-Uncommon  { background: #5a8fa8; }
 .r-Rare      { background: #c8963c; }
 .r-Legendary, .r-Mythic { background: #b05a20; }
+.r-Promo     { background: #9b30ff; }
 
 /* ── Card detail modal ─────────────────────────── */
 .modal-bg {
@@ -694,14 +1097,14 @@ header {
 .modal {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 32px;
+  gap: 36px;
   background: var(--surface);
   border: 1px solid var(--border2);
-  max-width: 780px;
+  max-width: 1000px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  padding: 32px;
+  padding: 40px;
   position: relative;
   animation: modalIn 0.22s ease;
 }
@@ -720,11 +1123,11 @@ header {
 
 /* Card image panel */
 .modal-img-wrap {
-  width: 200px;
+  width: 280px;
   flex-shrink: 0;
 }
 .modal-card-img {
-  width: 200px;
+  width: 280px;
   aspect-ratio: var(--card-ratio);
   object-fit: cover;
   border-radius: 6px;
@@ -732,7 +1135,7 @@ header {
   display: block;
 }
 .modal-no-img {
-  width: 200px;
+  width: 280px;
   aspect-ratio: var(--card-ratio);
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -740,7 +1143,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-dim);
   letter-spacing: 0.06em;
   text-align: center;
@@ -750,20 +1153,21 @@ header {
 /* Info panel */
 .modal-info { min-width: 0; }
 .modal-num {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--gold-dim);
   letter-spacing: 0.15em;
   margin-bottom: 6px;
+  display: inline-block;
 }
 .modal-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 400;
   line-height: 1.15;
   margin-bottom: 4px;
 }
 .modal-typeline {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-dim);
   letter-spacing: 0.04em;
   margin-bottom: 20px;
@@ -773,21 +1177,21 @@ header {
 .modal-field { margin-bottom: 14px; }
 .modal-field label {
   display: block;
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold-dim);
   margin-bottom: 4px;
 }
 .modal-field p {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text);
   line-height: 1.65;
 }
 .modal-field .flavor {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--text-dim);
 }
 .extra-chips {
@@ -800,7 +1204,7 @@ header {
   background: var(--surface2);
   border: 1px solid var(--border);
   padding: 3px 10px;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.04em;
 }
 .extra-chip strong { color: var(--gold-dim); margin-right: 4px; }
@@ -817,19 +1221,119 @@ header {
   color: var(--text-mid);
   margin-bottom: 8px;
 }
-
-
-
 /* ── Scrollbar ─────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+
+/* ══════════════════════════════════════════════════
+   MOBILE  (≤ 768px)
+══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Header */
+  header { padding: 0 16px; height: 50px; }
+  .logo { font-size: 15px; letter-spacing: 0.06em; }
+  .breadcrumb { margin-left: 12px; font-size: 10px; }
+  .breadcrumb .crumb { padding: 2px 4px; }
+
+  /* Page padding */
+  .page { padding: 28px 16px; }
+
+  /* Home game grid — single column */
+  .game-grid { grid-template-columns: 1fr; gap: 12px; }
+  .game-tile-name { font-size: 22px; }
+  .game-tile-body { padding: 20px 18px 18px; }
+
+  /* Game hero banner */
+  .game-page-hero { height: 180px; }
+
+  /* Game title */
+  .game-hero h1, .game-title { font-size: 38px; }
+  .game-hero { margin-bottom: 20px; }
+
+  /* Facts strip — wrap naturally */
+  .game-facts { margin-bottom: 0; }
+  .game-fact { padding: 12px 16px; }
+  .game-fact-val { font-size: 14px; }
+
+  /* Overview image — hide on mobile, text full width */
+  .game-overview-block { grid-template-columns: 1fr; }
+  .game-overview-img-wrap { display: none; }
+  .game-overview { font-size: 15px; }
+
+  /* Info panels — single column */
+  .game-info-panels { grid-template-columns: 1fr; }
+  .span-2 { grid-column: span 1; }
+
+  /* Scan section inner — stack vertically */
+  .scan-section-inner { grid-template-columns: 1fr; }
+  .scan-card-back {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 24px 16px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+  .scan-card-back img { height: 80px; }
+  .scan-info { padding: 20px 16px; }
+  .scan-downloads-col {
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding: 20px 16px;
+  }
+
+  /* Set tiles */
+  .set-tile-name { font-size: 20px; }
+  .set-tile-body { padding: 20px 16px; }
+  .set-tile-arrow { display: none; }
+
+  /* Set controls — wrap */
+  .set-controls { gap: 6px; }
+  .search-input { min-width: 100%; }
+  .filter-select { max-width: none; flex: 1; font-size: 11px; }
+  .size-control { margin-left: 0; width: 100%; justify-content: space-between; }
+
+  /* Card list view */
+  .card-list-row {
+    grid-template-columns: 28px 1fr 80px;
+  }
+  /* Hide type and artist columns on mobile list view */
+  .card-list-row .card-list-cell:nth-child(3),
+  .card-list-row .card-list-cell:nth-child(5) { display: none; }
+
+  /* Card modal — stack vertically */
+  .modal {
+    grid-template-columns: 1fr;
+    padding: 20px 16px 24px;
+    gap: 20px;
+    max-height: 95vh;
+  }
+  .modal-bg { padding: 12px; }
+  .modal-img-wrap { width: 100%; display: flex; justify-content: center; }
+  .modal-card-img, .modal-no-img { width: 160px; }
+
+  /* Section title */
+  .section-title { font-size: 26px; }
+
+  /* Footer */
+  footer {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .footer-socials { justify-content: center; }
+  .footer-github-label { display: none; }
+  .footer-github { width: 32px; padding: 0; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo" id="logo">TCG <em>Archive</em></div>
+  <div class="logo" id="logo">Zarthbenn's <em>TCG Vault</em></div>
   <nav class="breadcrumb" id="breadcrumb"></nav>
   <div class="header-right"></div>
 </header>
@@ -845,16 +1349,42 @@ header {
   </div>
 </div>
 
+<footer>
+  <span class="footer-made">Made by <strong>Zarthbenn</strong> in 2026</span>
+  <div class="footer-socials">
+    <a href="https://github.com/Zarthbenn/zarthbenn-tcgvault" class="footer-social footer-github" title="View on GitHub" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      <span class="footer-github-label">View on GitHub</span>
+    </a>
+    <a href="https://www.youtube.com/@Zarthbenn" class="footer-social" title="YouTube" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    </a>
+    <a href="https://x.com/Zarthbenn" class="footer-social" title="Twitter / X" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+    </a>
+    <a href="https://bsky.app/profile/zarthbenn.bsky.social" class="footer-social" title="Bluesky" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.204-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8Z"/></svg>
+    </a>
+  </div>
+</footer>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.min.js"></script>
 <script>
 // ── State ─────────────────────────────────────────────────
 const state = {
   games: [],
-  currentGame: null,   // manifest entry
+  currentGame: null,
   db: null,
   currentSet: null,
-  loadedDbs: {}        // cache: db path → SQL.Database
+  loadedDbs: {}
 };
+let gridColWidth = (() => {
+  // Fill edge to edge: page max-width 1400px with 40px padding each side = 1320px usable
+  // Target ~150px per card to fill the row
+  const usable = Math.min(window.innerWidth, 1400) - 80;
+  const cols = Math.floor(usable / 150);
+  return Math.floor(usable / cols) - 6; // subtract gap
+})();
 
 // ── sql.js init ───────────────────────────────────────────
 const SQL_READY = initSqlJs({
@@ -915,6 +1445,7 @@ function renderHome() {
   state.currentSet = null;
   state.db = null;
   setBreadcrumb([]);
+  window.scrollTo({ top: 0, behavior: 'instant' });
   document.getElementById('app').innerHTML = `
     <div class="page">
       <div class="game-grid" id="game-grid"></div>
@@ -930,7 +1461,7 @@ function renderHome() {
     tile.style.setProperty('--game-color', game.cover_color || '#c8963c');
 
     const heroInner = game.hero_image
-      ? `<img src="${game.hero_image}" alt="${game.name}" onerror="this.parentElement.innerHTML='<div class=\\"game-tile-hero-fallback\\"><span>${game.name}</span></div>'">`
+      ? `<img src="${game.hero_image}" alt="${game.name}" onerror="tileImgFallback(this,'${game.name.replace(/'/g,"\\'")}'">`
       : `<div class="game-tile-hero-fallback"><span>${game.name}</span></div>`;
 
     const metaParts = [game.publisher, game.years_active].filter(Boolean);
@@ -951,7 +1482,7 @@ function renderHome() {
             <div class="game-tile-stat-label">Cards</div>
           </div>
         </div>
-        <div class="game-tile-cta">Browse Archive <span class="game-tile-cta-arrow">→</span></div>
+        <div class="game-tile-cta">View Game <span class="game-tile-cta-arrow">→</span></div>
       </div>`;
 
     tile.addEventListener('click', () => openGame(game, tile));
@@ -986,6 +1517,7 @@ async function openGame(game, tileEl) {
     state.currentGame = game;
     state.db = db;
     state.currentSet = null;
+    window.scrollTo({ top: 0, behavior: 'instant' });
     renderGame(game, db);
   } catch(e) {
     alert(`Failed to load ${game.name}: ${e.message}`);
@@ -993,15 +1525,10 @@ async function openGame(game, tileEl) {
   }
 }
 
-function getYouTubeId(url) {
-  if (!url) return null;
-  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
-  return m ? m[1] : null;
-}
-
 function renderLinkList(links) {
-  if (!links?.length) return `<span class="info-empty">None listed</span>`;
-  return `<ul class="info-link-list">${links.map(l =>
+  const valid = (links || []).filter(l => l.url && l.url.trim() !== '');
+  if (!valid.length) return `<span class="info-empty">None listed</span>`;
+  return `<ul class="info-link-list">${valid.map(l =>
     `<li><a href="${l.url}" target="_blank" rel="noopener">${l.label}</a></li>`
   ).join('')}</ul>`;
 }
@@ -1009,7 +1536,7 @@ function renderLinkList(links) {
 function renderGame(game, db) {
   const sets = q(db, `
     SELECT s.*, (SELECT COUNT(*) FROM cards WHERE set_id = s.id) as card_count
-    FROM sets s ORDER BY release_date, name`);
+    FROM sets s ORDER BY s.id ASC`);
 
   setBreadcrumb([
     { label: 'Archive', onClick: `renderHome` },
@@ -1018,93 +1545,156 @@ function renderGame(game, db) {
 
   const totalCards = sets.reduce((a, s) => a + (s.card_count || 0), 0);
 
-  // ── Video ──────────────────────────────────────
-  const ytId = getYouTubeId(game.how_to_play_video);
-  const videoHtml = ytId ? `
-    <div class="game-video-wrap">
-      <iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-      </iframe>
-    </div>` : '';
+  const gc = game.cover_color || '#8a6628';
 
-  // ── Quick facts ────────────────────────────────
+  // ── Page hero banner ───────────────────────────
+  const heroHtml = `
+    <div class="game-page-hero" style="--game-color: ${gc}">
+      ${game.hero_image
+        ? `<img src="${game.hero_image}" alt="${game.name}" onerror="pageHeroFallback(this)">`
+        : `<div class="game-page-hero-fallback"></div>`}
+    </div>`;
+
+  // ── Quick facts (publisher + years only) ───────
   const facts = [];
-  if (game.players)        facts.push({ label: 'Players',    val: game.players });
-  if (game.play_time)      facts.push({ label: 'Play Time',  val: game.play_time });
-  if (game.years_active)   facts.push({ label: 'Years Active', val: game.years_active });
-  if (game.publisher)      facts.push({ label: 'Publisher',  val: game.publisher });
-  if (game.out_of_print != null) facts.push({
-    label: 'Status',
-    val: game.out_of_print
-      ? `<span class="out-of-print">Out of Print</span>`
-      : `<span class="in-print">In Print</span>`
-  });
-  const factsHtml = facts.length ? `
+  if (game.publisher)    facts.push({ label: 'Publisher',    val: game.publisher });
+  if (game.years_active) facts.push({ label: 'Years Active', val: game.years_active });
+  facts.push({ label: 'Sets',  val: sets.length });
+  facts.push({ label: 'Cards', val: totalCards });
+  const factsHtml = `
     <div class="game-facts">
       ${facts.map(f => `
         <div class="game-fact">
           <div class="game-fact-label">${f.label}</div>
           <div class="game-fact-val">${f.val}</div>
         </div>`).join('')}
+    </div>
+    <hr class="game-facts-sep">`;
+
+  // ── Overview + designers ───────────────────────
+  const designersLine = game.designers?.length
+    ? `<p class="game-designers">Designed by ${game.designers.join(', ')}</p>` : '';
+  const overviewImgHtml = game.overview_image ? `
+    <div class="game-overview-img-wrap">
+      <img src="${game.overview_image}" alt="${game.name}">
+      ${game.overview_image_caption ? `<span class="game-overview-img-caption">${game.overview_image_caption}</span>` : ''}
+    </div>` : '';
+  const overviewHtml = (game.overview || designersLine) ? `
+    <div class="game-overview-block">
+      <div class="game-overview-text">
+        ${game.overview ? `<p class="game-overview">${game.overview}</p>` : ''}
+        ${designersLine}
+      </div>
+      ${overviewImgHtml}
     </div>` : '';
 
-  // ── Overview ───────────────────────────────────
-  const overviewHtml = game.overview
-    ? `<p class="game-overview">${game.overview}</p>` : '';
+  // ── How to play / Rulebooks / Where to play ──
+  const infoRowHtml = `
+    <div class="game-info-panel">
+      <div class="game-info-panel-title">How to Play Videos</div>
+      ${renderLinkList(game.how_to_play_videos || (game.how_to_play_video ? [{ label: 'Watch on YouTube', url: game.how_to_play_video }] : []))}
+    </div>
+    <div class="game-info-panel">
+      <div class="game-info-panel-title">Rulebooks &amp; Guides</div>
+      ${renderLinkList(game.rulebook_links)}
+    </div>
+    <div class="game-info-panel">
+      <div class="game-info-panel-title">Where to Play</div>
+      ${renderLinkList(game.where_to_play_links)}
+    </div>`;
 
-  // ── Designers ──────────────────────────────────
-  const designersHtml = game.designers?.length
-    ? `<div class="designer-list">${game.designers.map(d => `<span class="designer-tag">${d}</span>`).join('')}</div>`
-    : `<span class="info-empty">None listed</span>`;
+  // ── Scan doc + Community side by side ──────────
+  const nameTags = (arr) => {
+    if (!arr) return '<span class="info-empty">None listed</span>';
+    const list = Array.isArray(arr) ? arr : [arr];
+    return `<div class="scan-names">${list.map(n => `<span class="scan-name-tag">${n}</span>`).join('')}</div>`;
+  };
+  const sp = game.scan_project || {};
+  const years = [sp.start_year, sp.end_year].filter(Boolean).join('–');
 
-  // ── Related games ──────────────────────────────
-  const relatedHtml = game.related_games?.length
-    ? `<div class="related-list">${game.related_games.map(r => `<span class="related-tag">${r}</span>`).join('')}</div>`
-    : `<span class="info-empty">None listed</span>`;
+  const scanInnerHtml = (game.card_back_image || game.scan_project) ? `
+    <div class="scan-section span-2">
+      <div class="scan-section-inner">
+        ${game.card_back_image ? `
+        <div class="scan-card-back">
+          <img src="${game.card_back_image}" alt="Card back"
+            onerror="this.style.display='none';this.nextElementSibling.textContent='Image unavailable'">
+          <span class="scan-card-back-label">Card Back</span>
+        </div>` : ''}
+        <div class="scan-info">
+          <div class="scan-info-title">Scan Documentation</div>
+          <div class="scan-fields">
+            ${sp.scanned_by   ? `<div class="scan-field"><label>Scanned by</label>${nameTags(sp.scanned_by)}</div>` : ''}
+            ${sp.processed_by ? `<div class="scan-field"><label>Processed by</label>${nameTags(sp.processed_by)}</div>` : ''}
+            ${years           ? `<div class="scan-field"><label>Project Years</label><p class="scan-year-val">${years}</p></div>` : ''}
+            ${sp.notes        ? `<p class="scan-notes">${sp.notes}</p>` : ''}
+          </div>
+        </div>
+        ${sp.downloads?.length ? `
+        <div class="scan-downloads-col">
+          <span class="scan-downloads-label">Download Full Scans</span>
+          <div class="scan-download-links">
+            ${sp.downloads.map(d => `
+            <a href="${d.url}" class="scan-download-link" target="_blank" rel="noopener">
+              <span class="scan-download-icon">↓</span>
+              ${d.label}
+            </a>`).join('')}
+          </div>
+        </div>` : ''}
+      </div>
+    </div>` : '';
 
-  // ── Info panels ────────────────────────────────
-  const panels = [
-    { title: 'Designers',           body: designersHtml },
-    { title: 'Community',           body: renderLinkList(game.community_links) },
-    { title: 'Rulebooks & Guides',  body: renderLinkList(game.rulebook_links) },
-    { title: 'Where to Find Cards', body: renderLinkList(game.find_cards) },
-    { title: 'Errata & FAQ',        body: renderLinkList(game.errata_links) },
-    { title: 'Related Games',       body: relatedHtml },
-  ];
+  const communityHtml = `
+    <div class="scan-community-panel">
+      <div class="game-info-panel-title">Community</div>
+      ${renderLinkList(game.community_links)}
+    </div>`;
 
-  const panelsHtml = `<div class="game-info-grid">
-    ${panels.map(p => `
-      <div class="game-info-panel">
-        <div class="game-info-panel-title">${p.title}</div>
-        ${p.body}
-      </div>`).join('')}
-  </div>`;
+  const scanCommunityHtml = (scanInnerHtml || game.community_links?.length) ? `
+    ${scanInnerHtml || '<div class="span-2"></div>'}
+    ${communityHtml}` : '';
 
-  // ── Sets ───────────────────────────────────────
-  const setsHtml = sets.map(s => `
+  // ── Set tiles ──────────────────────────────────
+  const setsHtml = sets.map(s => {
+    const imgRow = q(db,
+      `SELECT image_url FROM cards WHERE set_id = ? AND image_url IS NOT NULL AND image_url != ''
+       ORDER BY RANDOM() LIMIT 1`, [s.id]);
+    const bgImg = imgRow.length
+      ? `<img class="set-tile-bg-img" src="${imgRow[0].image_url}" alt="" loading="lazy">`
+      : '';
+    return `
     <div class="set-tile" onclick="openSet(${s.id})">
-      ${s.code ? `<div class="set-tile-code">${s.code}</div>` : ''}
-      <div class="set-tile-name">${s.name}</div>
-      ${s.release_date ? `<div class="set-tile-date">${s.release_date}</div>` : ''}
-      <div class="set-tile-count">${s.card_count} cards</div>
+      <div class="set-tile-bg">${bgImg}</div>
+      <div class="set-tile-body">
+        <div class="set-tile-top">
+          <span class="set-tile-name">${s.name}</span>
+          ${s.code ? `<span class="set-tile-code">${s.code}</span>` : ''}
+        </div>
+        <div class="set-tile-meta">
+          ${s.release_date ? `<span class="set-tile-date">${s.release_date}</span>` : ''}
+          <span class="set-tile-count">${s.card_count} cards</span>
+        </div>
+        ${s.notes ? `<div class="set-tile-notes">${s.notes}</div>` : ''}
+      </div>
       <span class="set-tile-arrow">→</span>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   document.getElementById('app').innerHTML = `
-    <div class="page">
+    ${heroHtml}
+    <div class="page game-page" style="--game-color: ${gc}">
       <div class="game-hero">
-        <h1>${game.name}</h1>
-        <div class="game-hero-meta">
-          <span><strong>${sets.length}</strong> sets · <strong>${totalCards}</strong> cards</span>
-        </div>
+        <h1 class="game-title">${game.name}</h1>
       </div>
       <div class="game-info">
-        ${videoHtml}
         ${factsHtml}
         ${overviewHtml}
-        ${panelsHtml}
+        <div class="game-info-panels">
+          ${infoRowHtml}
+          ${scanCommunityHtml}
+        </div>
       </div>
-      <div class="section-title">Sets &amp; Expansions</div>
+      <div class="section-title">Card Sets</div>
       <div class="set-list">${setsHtml || '<p style="color:var(--text-dim)">No sets found.</p>'}</div>
     </div>`;
 }
@@ -1115,52 +1705,119 @@ function openSet(setId) {
   const set = q(db, 'SELECT * FROM sets WHERE id = ?', [setId])[0];
   if (!set) return;
   state.currentSet = set;
+  window.scrollTo({ top: 0, behavior: 'instant' });
   renderSet(set, db);
 }
 
-function renderSet(set, db, filter = '', rarityFilter = '') {
-  let sql = 'SELECT * FROM cards WHERE set_id = ? ORDER BY CAST(collector_number AS INTEGER), name';
-  let allCards = q(db, sql, [set.id]);
+let currentView = 'grid'; // persists across filter changes
 
-  const rarities = [...new Set(allCards.map(c => c.rarity).filter(Boolean))].sort();
+function renderSet(set, db) {
+  let allCards = q(db, 'SELECT * FROM cards WHERE set_id = ? ORDER BY CAST(collector_number AS INTEGER), name', [set.id]);
+
+  const unique = (field) => [...new Set(allCards.map(c => c[field]).filter(Boolean))].sort();
+  const rarities = unique('rarity');
+  const types    = unique('card_type');
+  const artists  = unique('artist');
 
   setBreadcrumb([
-    { label: 'Archive', onClick: `renderHome` },
+    { label: 'Archive',  onClick: `renderHome` },
     { label: state.currentGame.name, onClick: `renderGame(state.currentGame, state.db)` },
     { label: set.name }
   ]);
 
-  const rarityOpts = ['<option value="">All rarities</option>']
-    .concat(rarities.map(r => `<option value="${r}">${r}</option>`)).join('');
+  const opts = (list, placeholder) =>
+    `<option value="">${placeholder}</option>` +
+    list.map(v => `<option value="${v}">${v}</option>`).join('');
 
   document.getElementById('app').innerHTML = `
     <div class="page">
       <div class="set-controls">
-        <input class="search-input" id="card-search" placeholder="Search cards…" value="${filter}" autocomplete="off">
-        <select class="filter-select" id="rarity-filter">
-          ${rarityOpts}
-        </select>
+        <input class="search-input" id="card-search"
+          placeholder="Search name, artist, rules text…" autocomplete="off">
+        <select class="filter-select" id="type-filter">${opts(types,   'All types')}</select>
+        <select class="filter-select" id="rarity-filter">${opts(rarities,'All rarities')}</select>
+        <select class="filter-select" id="artist-filter">${opts(artists, 'All artists')}</select>
+        <div class="size-control">
+          <span class="size-control-label">Size</span>
+          <input type="range" class="size-slider" id="grid-size"
+            min="80" max="220" step="5" value="${gridColWidth}">
+        </div>
+        <div class="view-toggle">
+          <button class="view-toggle-btn ${currentView==='grid'?'active':''}" id="btn-grid" title="Grid view">⊞</button>
+          <button class="view-toggle-btn ${currentView==='list'?'active':''}" id="btn-list" title="List view">☰</button>
+        </div>
       </div>
       <div id="card-grid-wrap"></div>
     </div>`;
 
-  document.getElementById('rarity-filter').value = rarityFilter;
-
   function applyFilters() {
-    const search = document.getElementById('card-search')?.value?.toLowerCase() || '';
+    const search = document.getElementById('card-search')?.value?.toLowerCase()  || '';
+    const type   = document.getElementById('type-filter')?.value   || '';
     const rarity = document.getElementById('rarity-filter')?.value || '';
+    const artist = document.getElementById('artist-filter')?.value || '';
+
     let filtered = allCards;
     if (search) filtered = filtered.filter(c =>
-      c.name?.toLowerCase().includes(search) ||
-      c.card_type?.toLowerCase().includes(search)
+      c.name?.toLowerCase().includes(search)       ||
+      c.artist?.toLowerCase().includes(search)     ||
+      c.rules_text?.toLowerCase().includes(search) ||
+      c.flavor_text?.toLowerCase().includes(search)
     );
-    if (rarity) filtered = filtered.filter(c => c.rarity === rarity);
-    renderCardGrid(filtered);
+    if (type)   filtered = filtered.filter(c => c.card_type === type);
+    if (rarity) filtered = filtered.filter(c => c.rarity    === rarity);
+    if (artist) filtered = filtered.filter(c => c.artist    === artist);
+
+    currentView === 'list' ? renderCardList(filtered) : renderCardGrid(filtered);
   }
 
-  document.getElementById('card-search')?.addEventListener('input', applyFilters);
-  document.getElementById('rarity-filter')?.addEventListener('change', applyFilters);
+  function applySize() {
+    gridColWidth = +document.getElementById('grid-size').value;
+    const grid = document.querySelector('.card-grid');
+    if (grid) grid.style.gridTemplateColumns =
+      `repeat(auto-fill, minmax(${gridColWidth}px, ${gridColWidth + 24}px))`;
+  }
+
+  function setView(v) {
+    currentView = v;
+    document.getElementById('btn-grid').classList.toggle('active', v === 'grid');
+    document.getElementById('btn-list').classList.toggle('active', v === 'list');
+    document.getElementById('grid-size').closest('.size-control').style.display =
+      v === 'list' ? 'none' : '';
+    applyFilters();
+  }
+
+  document.getElementById('card-search')?.addEventListener('input',  applyFilters);
+  document.getElementById('type-filter')?.addEventListener('change',  applyFilters);
+  document.getElementById('rarity-filter')?.addEventListener('change',applyFilters);
+  document.getElementById('artist-filter')?.addEventListener('change',applyFilters);
+  document.getElementById('grid-size')?.addEventListener('input',     applySize);
+  document.getElementById('btn-grid')?.addEventListener('click', () => setView('grid'));
+  document.getElementById('btn-list')?.addEventListener('click', () => setView('list'));
+
+  // Hide size slider in list mode on initial render
+  if (currentView === 'list') {
+    document.getElementById('grid-size').closest('.size-control').style.display = 'none';
+  }
+
   applyFilters();
+}
+
+// IntersectionObserver for truly lazy image loading
+let lazyObserver = null;
+function setupLazyObserver() {
+  if (lazyObserver) lazyObserver.disconnect();
+  lazyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+          delete img.dataset.src;
+          lazyObserver.unobserve(img);
+        }
+      }
+    });
+  }, { rootMargin: '200px' }); // start loading 200px before entering view
 }
 
 function renderCardGrid(cards) {
@@ -1170,14 +1827,72 @@ function renderCardGrid(cards) {
     wrap.innerHTML = `<div class="state-msg"><h3>No cards match</h3></div>`;
     return;
   }
-  wrap.innerHTML = `<div class="card-grid">${cards.map(buildCardTile).join('')}</div>`;
+  setupLazyObserver();
+  const grid = document.createElement('div');
+  grid.className = 'card-grid';
+  grid.style.gridTemplateColumns =
+    `repeat(auto-fill, minmax(${gridColWidth}px, ${gridColWidth + 24}px))`;
+  grid.innerHTML = cards.map(buildCardTile).join('');
+  wrap.innerHTML = '';
+  wrap.appendChild(grid);
+  // Register all lazy images with the observer
+  grid.querySelectorAll('img[data-src]').forEach(img => lazyObserver.observe(img));
+}
+
+function renderCardList(cards) {
+  const wrap = document.getElementById('card-grid-wrap');
+  if (!wrap) return;
+  if (!cards.length) {
+    wrap.innerHTML = `<div class="state-msg"><h3>No cards match</h3></div>`;
+    return;
+  }
+  const header = `
+    <div class="card-list-row list-header">
+      <div class="card-list-cell cell-num">#</div>
+      <div class="card-list-cell cell-name">Name</div>
+      <div class="card-list-cell">Type</div>
+      <div class="card-list-cell">Rarity</div>
+      <div class="card-list-cell">Artist</div>
+    </div>`;
+  const rows = cards.map(c => {
+    const rClass = c.rarity ? `r-${c.rarity}` : '';
+    return `
+    <div class="card-list-row" onclick="showCard(${c.id})">
+      <div class="card-list-cell cell-num">${c.collector_number || '—'}</div>
+      <div class="card-list-cell cell-name">${c.name}</div>
+      <div class="card-list-cell">${c.card_type || '—'}</div>
+      <div class="card-list-cell cell-rarity">
+        ${rClass ? `<span class="cell-dot ${rClass}"></span>` : ''}
+        ${c.rarity || '—'}
+      </div>
+      <div class="card-list-cell">${c.artist || '—'}</div>
+    </div>`;
+  }).join('');
+  wrap.innerHTML = `<div class="card-list">${header}${rows}</div>`;
+}
+
+function cardImgFallback(el, num, name, type) {
+  el.parentElement.innerHTML = `
+    <div class="card-placeholder">
+      <div class="ph-num">${num ? '#' + num : ''}</div>
+      <div class="ph-name">${name}</div>
+      <div class="ph-type">${type || ''}</div>
+    </div>
+    <div class="no-scan-badge">NO SCAN</div>`;
+}
+
+function modalImgFallback(el) {
+  el.outerHTML = '<div class="modal-no-img">No scan available</div>';
 }
 
 function buildCardTile(c) {
   const rClass = c.rarity ? `r-${c.rarity}` : '';
+  const safeNum  = (c.collector_number || '').replace(/'/g, '');
+  const safeName = (c.name            || '').replace(/'/g, '&#39;');
+  const safeType = (c.card_type       || '').replace(/'/g, '');
   const inner = c.image_url
-    ? `<img src="${c.image_url}" alt="${c.name}" loading="lazy"
-          onerror="this.outerHTML='${escapePlaceholder(c)}'">
+    ? `<img data-src="${c.image_url}" alt="${c.name}"
+           onerror="cardImgFallback(this,'${safeNum}','${safeName}','${safeType}')">
        <div class="card-tile-overlay">
          <div class="ov-name">${c.name}</div>
          <div class="ov-type">${c.card_type || ''}</div>
@@ -1187,16 +1902,11 @@ function buildCardTile(c) {
          <div class="ph-name">${c.name}</div>
          <div class="ph-type">${c.card_type || ''}</div>
        </div>
-       <div class="no-scan-badge">NO SCAN</div>`;
+       <div class="no-scan-badge">NO SCAN</div>
+       ${rClass ? `<div class="rarity-dot ${rClass}"></div>` : ''}`;
 
-  return `<div class="card-tile" onclick="showCard(${c.id})">
-    ${inner}
-    ${rClass ? `<div class="rarity-dot ${rClass}"></div>` : ''}
-  </div>`;
-}
-
-function escapePlaceholder(c) {
-  return `<div class=\\"card-placeholder\\"><div class=\\"ph-num\\">${c.collector_number ? '#'+c.collector_number : ''}</div><div class=\\"ph-name\\">${c.name}</div><div class=\\"ph-type\\">${c.card_type||''}</div></div>`;
+  // Rarity dot only shown on cards without a scan
+  return `<div class="card-tile" onclick="showCard(${c.id})">${inner}</div>`;
 }
 
 // ── CARD MODAL ────────────────────────────────────────────
@@ -1205,10 +1915,8 @@ function showCard(cardId) {
   const c = q(db, 'SELECT * FROM cards WHERE id = ?', [cardId])[0];
   if (!c) return;
 
-  // Image
   document.getElementById('modal-img').innerHTML = c.image_url
-    ? `<img class="modal-card-img" src="${c.image_url}" alt="${c.name}"
-           onerror="this.outerHTML='<div class=\\"modal-no-img\\">No scan available</div>'">`
+    ? `<img class="modal-card-img" src="${c.image_url}" alt="${c.name}" onerror="modalImgFallback(this)">`
     : `<div class="modal-no-img">No scan available</div>`;
 
   // Extra data chips
@@ -1223,11 +1931,13 @@ function showCard(cardId) {
   }
 
   document.getElementById('modal-info').innerHTML = `
-    ${c.collector_number ? `<div class="modal-num"># ${c.collector_number}</div>` : ''}
+    <div class="modal-num">${[
+      c.collector_number ? `# ${c.collector_number}` : '',
+      state.currentSet?.name || ''
+    ].filter(Boolean).join(' · ')}</div>
     <div class="modal-name">${c.name}</div>
     <div class="modal-typeline">
       ${[c.card_type, c.rarity].filter(Boolean).join(' · ')}
-      ${state.currentSet ? ` · ${state.currentSet.name}` : ''}
     </div>
     ${c.rules_text ? `<div class="modal-field"><label>Rules Text</label><p>${c.rules_text}</p></div>` : ''}
     ${c.flavor_text ? `<div class="modal-field"><label>Flavor Text</label><p class="flavor">${c.flavor_text}</p></div>` : ''}
@@ -1245,6 +1955,14 @@ function closeModal() { document.getElementById('modal-bg').classList.remove('op
 
 // ── Logo → home ───────────────────────────────────────────
 document.getElementById('logo').addEventListener('click', renderHome);
+
+// ── Image fallback helpers ────────────────────────────────
+function tileImgFallback(el, name) {
+  el.parentElement.innerHTML = `<div class="game-tile-hero-fallback"><span>${name}</span></div>`;
+}
+function pageHeroFallback(el) {
+  el.parentElement.innerHTML = `<div class="game-page-hero-fallback"></div>`;
+}
 
 // ── Go ────────────────────────────────────────────────────
 boot();
