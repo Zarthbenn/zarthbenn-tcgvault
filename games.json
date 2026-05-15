@@ -1,15 +1,105 @@
 [
   {
-    "id": "qftg-cc",
-    "name": "Quest for the Grail CCG",
+    "id": "dune-ccg",
+    "name": "Dune CCG",
     "publisher": "Horizon Games",
+    "years_active": "1997-1998",
+    "db": "data/dune-ccg.db",
+    "cover_color": "#B8860B",
+    "hero_image": "imgs/dune-hero.jpg",
+    "logo_image": "imgs/dune-logo.png",
+    "card_back_image": "https://drive.google.com/thumbnail?id=1i3cx2op02eBbvC4-87AGC35Syi4lGjbK&sz=w350",
+    "notes": "Command a Great House through a web of politics and desert warfare to master the flow of spice and seize ultimate control of Arrakis.",
+    "overview": "DUNE is a game of political and economic rivalry in which players each represent an Imperial House vying for admission to the Landsraad High Council. One of the Great Houses has offered to support your admission, if you will first help them seize control of Arrakis. Petition Imperial Cards and control the cost of Spice. The Exchange monitors surpluses and shortages within CHOAM's twin banks, inflating or deflating the value of Solaris according to the amount of spice held in reserve. The CHOAM Rate of Exchange (CROE) fluctuates from 1 to 6, indicating the value (in Solaris) of one unit of spice. </br></br>Conflict lies at the heart of the Imperium. The Great Convention provides formal rules for resolving House conflicts without harming innocents. These rules - the Forms of Kanly - dictate the types of aggression permitted and the processes involved. The Forms of Kanly sanction four methods for settling disputes among the Houses. These ritual forms are called Rites, and each has its own flavor and purpose.",
+    "designers": ["Owen Seyler", "Matthew Colville"],
+    "overview_image": "imgs/qftg-over.jpg",
+    "overview_image_caption": "BGG - Nick Bolton",
+    "how_to_play_videos": [
+      { "label": "Full Rules Video [Zarthbenn]", "url": "https://youtu.be/_T5eILpyPLg" }
+    ],
+     "rulebook_links": [
+      { "label": "Rulebook", "url": "https://docs.google.com/document/d/14nlmMGUaKFaDvQxvix9bCwHozmtxih9B8CM10mK88Ac/edit?tab=t.0" },
+      { "label": "Resource Fansite", "url": "https://duneccg.webflow.io/" }
+    ],
+    "where_to_play_links": [
+      { "label": "Tabletop Simulator Mod", "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3488244823&searchtext=dune+ccg" },
+      { "label": "Tabletop Simulator Cards Mod", "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3023668839&searchtext=dune+ccg" }
+    ],
+    "community_links": [
+      { "label": "Community Discord", "url": "https://discord.gg/Aj2UxwkEdh" },
+      { "label": "BoardGameGeek Page", "url": "https://boardgamegeek.com/boardgame/3851/dune-ccg" },
+      { "label": "Facebook Page", "url": "https://www.facebook.com/groups/412551215597336/" }
+    ],
+    "scan_project": {
+     "scanned_by": ["CCGTrader"],
+      "processed_by": "CCGTrader",
+      "start_year": "2020",
+      "end_year": "",
+      "additional_notes": "",
+
+      "downloads": [
+        { "label": "Card Scans Archive [Full]", "url": "https://drive.google.com/drive/folders/1b5-ND20pxazKr3EuVD9qTPZ6GUJYsC3u?usp=sharing" }
+      ]
+    }
+  },
+  {
+    "id": "wow-tcg",
+    "show_sets": false,
+    "name": "World of Warcraft TCG",
+    "publisher": "Upper Deck and Cryptozoic Entertainment",
+    "years_active": "2006-2010",
+    "db": "data/wow-tcg.db",
+    "cover_color": "#FF7C0A",
+    "hero_image": "imgs/wow-hero.jpg",
+    "logo_image": "imgs/wow-logo.png",
+    "card_back_image": "https://drive.google.com/thumbnail?id=0B3PgzLuAh5T6S0RvU1BEUmY3UU0&sz=w350",
+    "notes": "Lead a legendary champion with a band of allies through epic quests to claim powerful loot and secure your faction's dominance in the battle for Azeroth.",
+    "overview": "The World of Warcraft Trading Card Game draws from the rich lore of the Warcraft universe. Two factions are battling for supremacy over Azeroth—the Horde and the Alliance—and each time you play, you choose a hero from one of these factions to represent you. Your hero is the leader of your party who fights alongside your allies. The cards that you play will allow you to equip your hero with weapons and armor, use spells and talents, invite allies into your party, and complete quests. With each successive TCG set, the theme and cards echo the current max-level content from the online game. </br></br>The object of the game is to defeat your opponents before they defeat you. Over the course of the game, your hero and allies will deal damage to your opponents’ heroes and allies, and that damage is permanent unless it is healed. If your hero takes damage equal to or greater than his or her health, you’re out of the game.",
+    "designers": ["Mike Hummel", "Brian Kibler", "Danny Mandel"],
+    "overview_image": "imgs/wow-over.jpg",
+    "overview_image_caption": "BGG - Simon Hunt",
+    "how_to_play_videos": [
+      { "label": "Full Rules Video [Zarthbenn]", "url": "https://www.youtube.com/watch?v=RmtNrdSSRkM" },
+      { "label": "Advanced Topics Video [Zarthbenn]", "url": "https://www.youtube.com/watch?v=GAmy6QChmxM"}
+    ],
+     "rulebook_links": [
+      { "label": "Rulebook Archive", "url": "https://drive.google.com/drive/folders/1O2OzSzv_qZz-th2obylpLdnqYK6L3SEK" }
+    ],
+    "where_to_play_links": [
+      { "label": "Tabletop Simulator Mod", "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2236124562" },
+      { "label": "Untap.In", "url": "https://untap.in/" }
+    ],
+    "community_links": [
+      { "label": "Community Discord", "url": "https://discord.gg/E5dxGxE" },
+      { "label": "BoardGameGeek Page", "url": "https://boardgamegeek.com/boardgame/19643/world-of-warcraft-trading-card-game/videos/all" },
+      { "label": "Facebook Page", "url": "https://www.facebook.com/groups/wowtcgreborn/" }
+    ],
+    "scan_project": {
+     "scanned_by": ["Zarthbenn", "Mudnet", "Spass", "3vo", "Hblasto", "Loval", "Gloopjuice", "Muktiadata", "Mdogg", "RamptantDurandal", "Xistortion", "Mike R"],
+      "processed_by": "Zarthbenn",
+      "start_year": "2017",
+      "end_year": "2024",
+      "additional_notes": "For additional scans in a separate project check https://wowtcgtracker.com/.",
+
+      "downloads": [
+        { "label": "Basic Set Scans [Complete]", "url": "https://drive.google.com/drive/folders/0B3PgzLuAh5T6d2hid194ZnA1NE0?resourcekey=0-7MVjXbHMSPmEhR4nXdIjuQ&usp=sharing" },
+        { "label": "Raids and Dungeons Scans [Complete]", "url": "https://drive.google.com/drive/folders/0B3PgzLuAh5T6d2hid194ZnA1NE0?resourcekey=0-7MVjXbHMSPmEhR4nXdIjuQ&usp=sharing" },
+        { "label": "Additional Set Scans [Incomplete]", "url": "https://drive.google.com/drive/folders/0B3PgzLuAh5T6d2hid194ZnA1NE0?resourcekey=0-7MVjXbHMSPmEhR4nXdIjuQ&usp=sharing" }
+      ]
+    }
+  },
+  {
+    "id": "qftg-ccg",
+    "name": "Quest for the Grail CCG",
+    "publisher": "Horizon Games and Stone Ring Games",
     "years_active": "1995",
     "db": "data/qftg-ccg.db",
     "cover_color": "#880808",
     "hero_image": "imgs/qftg-hero.jpg",
+    "logo_image": "imgs/qftg-logo.png",
     "card_back_image": "https://drive.google.com/thumbnail?id=12sUk4vA9jofDyoCQ1bC8w3QqaVekwMiu&sz=w350",
     "notes": "Build an Arthurian kingdom and lead legendary knights through trials of valor to achieve the Holy Grail and secure your victory.",
-    "overview": "Your goal is to unify the fragmented nations of the British Isles and through virtuous rule establish the Holy Kingdom of Logres. Players construct a Court Deck of at least 40 cards, including Kings, Knights, and Domains, and a Quest Deck containing a minimum of 10 challenges that player's Warriors may undertake. To sustain your court, you must play Domain cards to generate Power, which is used to pay the necessary Upkeep for your Warriors and their retainers. As you expand your influence, you assign Companions, Vows, and Rewards to your Knights to enhance their characteristics and prepare them for the trials ahead. <br><br>Gameplay progresses as Warriors undertake Quests or engage in Formal and Mortal Combat to gain Valor. Combat is resolved by rolling two six-sided dice and adding a Warrior's Prowess to hit an opponent's Endurance. To secure ultimate victory, you must either fulfill a unique condition listed on a King card or have a Knight with at least 12 Valor successfully overcome three Quests in a single turn to achieve the Holy Grail.",
+    "overview": "Your goal is to unify the fragmented nations of the British Isles and through virtuous rule establish the Holy Kingdom of Logres. Players construct a Court Deck of at least 40 cards—including Kings, Knights, and Domains—and a Quest Deck containing a minimum of 10 challenges that player's Warriors may undertake. To sustain your court, you must play Domain cards to generate Power, which is used to pay the necessary Upkeep for your Warriors and their retainers. As you expand your influence, you assign Companions, Vows, and Rewards to your Knights to enhance their characteristics and prepare them for the trials ahead. <br><br>Gameplay progresses as Warriors undertake Quests or engage in Formal and Mortal Combat to gain Valor. Combat is resolved by rolling two six-sided dice and adding a Warrior's Prowess to hit an opponent's Endurance. To secure ultimate victory, you must either fulfill a unique condition listed on a King card or have a Knight with at least 12 Valor successfully overcome three Quests in a single turn to achieve the Holy Grail.",
     "designers": ["Dave Nalle", "Richard Trainham"],
     "overview_image": "imgs/qftg-over.jpg",
     "overview_image_caption": "BGG - Ken Van Pelt",
@@ -30,6 +120,8 @@
       "processed_by": "Zarthbenn",
       "start_year": "2023",
       "end_year": "",
+      "additional_notes": "",
+
       "downloads": [
         { "label": "Card Scans Archive [Full]", "url": "https://drive.google.com/drive/folders/1Ee84WB-kBRBnDLJ8CrX3W69SBxqpXJl3" }
       ]
