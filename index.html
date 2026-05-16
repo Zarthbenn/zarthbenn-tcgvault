@@ -297,36 +297,6 @@ footer {
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
 }
-.game-tile-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 18px;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.game-tile-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 14px 0;
-  text-align: center;
-}
-.game-tile-stat + .game-tile-stat {
-  border-left: 1px solid var(--border);
-}
-.game-tile-stat-val {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 24px;
-  font-weight: 400;
-  color: var(--text);
-  line-height: 1;
-}
-.game-tile-stat-label {
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
 .game-tile-name {
   font-family: 'Cormorant Garamond', serif;
   font-size: 30px;
@@ -357,7 +327,15 @@ footer {
   color: var(--text-mid);
   line-height: 1.7;
   flex: 1;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+}
+.game-tile-card-count {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
 
 /* Loading indicator */
@@ -588,6 +566,15 @@ footer {
 }
 
 /* Quick facts strip */
+.game-fact-designers {
+  padding: 16px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+  border-left: 1px solid var(--border);
+}
 .game-facts {
   display: flex;
   flex-wrap: wrap;
@@ -601,6 +588,7 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-shrink: 0;
 }
 .game-fact-label {
   font-size: 10px;
@@ -621,50 +609,48 @@ footer {
   margin: 0 0 36px 0;
 }
 
-/* Overview with side image */
+/* Overview with card panel */
 .game-overview-block {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 32px;
-  align-items: start;
+  grid-template-columns: 1fr 14%;
+  gap: 28px;
+  align-items: stretch;
   margin-bottom: 36px;
 }
 .game-overview-text { min-width: 0; }
 .game-overview {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 19px;
+  font-size: 20px;
   line-height: 1.8;
-  color: var(--text-mid);
+  color: var(--text);
   margin-bottom: 10px;
 }
-.game-designers {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 17px;
-  font-style: italic;
-  color: var(--text-mid);
-  letter-spacing: 0.03em;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-.game-overview-img-wrap {
-  width: 180px;
+
+/* Cycling card panel */
+.overview-card-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
   flex-shrink: 0;
+  min-height: 120px;
+}
+.overview-card-slide {
+  position: absolute;
+  inset: 0;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 1s ease;
 }
-.game-overview-img-wrap img {
-  width: 100%;
-  border: 1px solid var(--border2);
-  display: block;
-}
-.game-overview-img-caption {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  text-align: center;
+.overview-card-slide.active { opacity: 1; }
+.overview-card-slide img {
+  height: 130%;
+  width: auto;
+  transform: rotate(15deg);
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 /* Info + scan grid — unified 3-column layout */
@@ -1319,8 +1305,7 @@ footer {
 
   /* Overview image — hide on mobile, text full width */
   .game-overview-block { grid-template-columns: 1fr; }
-  .game-overview-img-wrap { display: none; }
-  .game-overview { font-size: 15px; }
+  .game-overview { font-size: 17px; }
 
   /* Info panels — single column */
   .game-info-panels { grid-template-columns: 1fr; }
@@ -1533,37 +1518,24 @@ function renderHome() {
       <div class="game-tile-hero">${heroInner}${tileLogoHtml}</div>
       <div class="game-tile-body">
         <div class="game-tile-name">${game.name}<span class="game-tile-name-arrow">→</span></div>
-        ${metaParts.length ? `<div class="game-tile-meta">${metaParts.join(' · ')}</div>` : ''}
+        <div class="game-tile-meta">${metaParts.join(' · ')}</div>
         ${game.notes ? `<div class="game-tile-notes">${game.notes}</div>` : ''}
-        <div class="game-tile-stats" id="stats-${game.id}">
-          <div class="game-tile-stat">
-            <div class="game-tile-stat-val">—</div>
-            <div class="game-tile-stat-label">Sets</div>
-          </div>
-          <div class="game-tile-stat">
-            <div class="game-tile-stat-val">—</div>
-            <div class="game-tile-stat-label">Cards</div>
-          </div>
-        </div>
+        <div class="game-tile-card-count" id="count-${game.id}"></div>
       </div>`;
 
     tile.addEventListener('click', () => openGame(game, tile));
     grid.appendChild(tile);
 
-    // Load stats from DB in background
     loadGameDb(game).then(db => {
       const row = q(db, `SELECT COUNT(DISTINCT s.id) as set_count, COUNT(c.id) as card_count
         FROM sets s LEFT JOIN cards c ON c.set_id = s.id`)[0];
-      const el = document.getElementById(`stats-${game.id}`);
-      if (el) el.innerHTML = `
-        <div class="game-tile-stat">
-          <div class="game-tile-stat-val">${row?.set_count ?? '—'}</div>
-          <div class="game-tile-stat-label">Sets</div>
-        </div>
-        <div class="game-tile-stat">
-          <div class="game-tile-stat-val">${row?.card_count ?? '—'}</div>
-          <div class="game-tile-stat-label">Cards</div>
-        </div>`;
+      const el = document.getElementById(`count-${game.id}`);
+      if (el && row) {
+        const parts = [];
+        if (row.set_count)  parts.push(`${row.set_count} sets`);
+        if (row.card_count) parts.push(`${row.card_count} cards`);
+        el.textContent = parts.join(' · ');
+      }
     }).catch(() => {});
   });
 }
@@ -1620,12 +1592,17 @@ function renderGame(game, db) {
         : ''}
     </div>`;
 
-  // ── Quick facts (publisher + years only) ───────
+  // ── Quick facts + designers ────────────────────
   const facts = [];
   if (game.publisher)    facts.push({ label: 'Publisher',    val: game.publisher });
   if (game.years_active) facts.push({ label: 'Years Active', val: game.years_active });
   facts.push({ label: 'Sets',  val: sets.length });
   facts.push({ label: 'Cards', val: totalCards });
+  const designerChits = game.designers?.length
+    ? `<div class="game-fact-designers">
+        <div class="game-fact-label">Designed by</div>
+        <div class="game-fact-val">${game.designers.join(', ')}</div>
+      </div>` : '';
   const factsHtml = `
     <div class="game-facts">
       ${facts.map(f => `
@@ -1633,25 +1610,32 @@ function renderGame(game, db) {
           <div class="game-fact-label">${f.label}</div>
           <div class="game-fact-val">${f.val}</div>
         </div>`).join('')}
+      ${designerChits}
     </div>
     <hr class="game-facts-sep">`;
 
-  // ── Overview + designers ───────────────────────
-  const designersLine = game.designers?.length
-    ? `<p class="game-designers">Designed by ${game.designers.join(', ')}</p>` : '';
-  const overviewImgHtml = game.overview_image ? `
-    <div class="game-overview-img-wrap">
-      <img src="${game.overview_image}" alt="${game.name}">
-      ${game.overview_image_caption ? `<span class="game-overview-img-caption">${game.overview_image_caption}</span>` : ''}
-    </div>` : '';
-  const overviewHtml = (game.overview || designersLine) ? `
-    <div class="game-overview-block">
-      <div class="game-overview-text">
-        ${game.overview ? `<p class="game-overview">${game.overview}</p>` : ''}
-        ${designersLine}
-      </div>
-      ${overviewImgHtml}
-    </div>` : '';
+  // ── Overview + cycling card panel ──────────────
+  let overviewHtml = '';
+  if (game.overview) {
+    const cardImgs = q(db,
+      `SELECT image_url FROM cards
+       WHERE image_url IS NOT NULL AND image_url != ''
+       ORDER BY RANDOM() LIMIT 3`);
+    const panelHtml = cardImgs.length ? `
+      <div class="overview-card-panel" id="overview-panel">
+        ${cardImgs.map((r, i) => `
+        <div class="overview-card-slide${i === 0 ? ' active' : ''}">
+          <img src="${r.image_url}" alt="" loading="lazy">
+        </div>`).join('')}
+      </div>` : '';
+    overviewHtml = `
+      <div class="game-overview-block">
+        <div class="game-overview-text">
+          <p class="game-overview">${game.overview}</p>
+        </div>
+        ${panelHtml}
+      </div>`;
+  }
 
   // ── How to play / Rulebooks / Where to play ──
   const infoRowHtml = `
@@ -1756,6 +1740,7 @@ function renderGame(game, db) {
       <div class="game-info">
         ${factsHtml}
         ${overviewHtml}
+        <div class="section-title">Resources</div>
         <div class="game-info-panels">
           ${infoRowHtml}
           ${scanCommunityHtml}
@@ -1765,6 +1750,17 @@ function renderGame(game, db) {
       <div class="section-title">Card Sets</div>
       <div class="set-list">${setsHtml || '<p style="color:var(--text-dim)">No sets found.</p>'}</div>` : ''}
     </div>`;
+
+  // Start cycling the overview card panel
+  const panelSlides = document.querySelectorAll('.overview-card-slide');
+  if (panelSlides.length > 1) {
+    let cur = 0;
+    setInterval(() => {
+      panelSlides[cur].classList.remove('active');
+      cur = (cur + 1) % panelSlides.length;
+      panelSlides[cur].classList.add('active');
+    }, 3500);
+  }
 }
 
 // ── SET VIEW ──────────────────────────────────────────────
